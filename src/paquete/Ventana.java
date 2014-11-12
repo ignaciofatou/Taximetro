@@ -312,19 +312,17 @@ public class Ventana extends javax.swing.JFrame {
         jTextAreaTicket.append("Hora fin trayecto: " +  formato.format(horaFin) + ":" + formato.format(minutoFin) + ":" + formato.format(segundoFin) + "\n");
         
         //Calculamos segundos totales Inicio
-        int segIniTotales = (horaIni * 3600) + (minutoIni * 60) + segundoIni;
+        int segIniTotales = getSegundosTotales(horaIni, minutoIni, segundoIni);
         
         //Calculamos segundos totales Fin
-        int segFinTotales = (horaFin * 3600) + (minutoFin * 60) + segundoFin;
+        int segFinTotales = getSegundosTotales(horaFin, minutoFin, segundoFin);
         
         //Calculamos el Tiempo total
-        int segTotales = segFinTotales - segIniTotales;
-        int duracionSegundos = segTotales;
-        int duracionHoras   = duracionSegundos / 3600;
-        duracionSegundos = duracionSegundos - (duracionHoras * 3600);        
-        int duracionMinutos = duracionSegundos / 60;
-        duracionSegundos = duracionSegundos - (duracionMinutos * 60); 
-        
+        int segTotales       = segFinTotales - segIniTotales;
+        int duracionHoras    = getHoras(segTotales);                
+        int duracionMinutos  = getMinutos(segTotales, duracionHoras);
+        int duracionSegundos = getSegundos(segTotales, duracionHoras, duracionMinutos);
+
         //Mostramos la Duración del Viaje
         jTextAreaTicket.append("Duración trayecto: " + formato.format(duracionHoras) + ":" + formato.format(duracionMinutos) + ":" + formato.format(duracionSegundos) + "\n");
         
@@ -334,19 +332,39 @@ public class Ventana extends javax.swing.JFrame {
         double importe = (segTotales * TARIFA) / 60;
         double importeIVA = (importe * IVA);
         double importeTotal = importe + importeIVA;
-        double importeRound = Math.round(importe * 100);
-        double importeIVARound = Math.round(importeIVA * 100);
-        double importeTotalRound = Math.round(importeTotal * 100);
-
-        jTextAreaTicket.append("Importe: " + (importeRound / 100) + " €" + "\n");
-        jTextAreaTicket.append("IVA: " + (importeIVARound / 100) + " €" + "\n");
-        jTextAreaTicket.append("Importe total: " + (importeTotalRound / 100) + " €");
+        
+        //Establecemos el Formato para Redondear a 2 decimales
+        formato.applyPattern("#.##");
+        
+        jTextAreaTicket.append("Importe: " + formato.format(importe) + " €" + "\n");
+        jTextAreaTicket.append("IVA: " + formato.format(importeIVA) + " €" + "\n");
+        jTextAreaTicket.append("Importe total: " + formato.format(importeTotal) + " €");
         
         // Cambiamos de orden la habilitacion de botones
         jButtonBandera.setEnabled(true);
         jButtonFin.setEnabled(false);
     }//GEN-LAST:event_jButtonFinActionPerformed
 
+    
+    private int getSegundosTotales(int horas, int minutos, int segundos){        
+        return ((horas * 3600) + (minutos * 60) + segundos);        
+    }
+    
+    private int getHoras(int segundosTotales){
+        return (segundosTotales / 3600);
+    }
+    private int getMinutos(int segundosTotales, int horas){
+        
+        int segundosRestantes = segundosTotales - (horas * 3600);
+        return (segundosRestantes / 60);
+    }    
+    private int getSegundos(int segundosTotales, int horas, int minutos){
+        
+        int segundosRestantes = segundosTotales - (horas * 3600);        
+        return (segundosTotales - (minutos * 60));
+    }
+    
+    
     /**
      * @param args the command line arguments
      */
