@@ -5,17 +5,27 @@
  */
 package paquete;
 
+import java.text.DecimalFormat;
+import java.util.Calendar;
+
 /**
  *
  * @author Ignacio
  */
 public class Ventana extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Ventana
-     */
+    int contadorTicket = 0;
+    int horaIni    = 0;
+    int minutoIni  = 0;
+    int segundoIni = 0;
+    final double TARIFA = 0.50;
+    final double IVA = 0.21;
+    
     public Ventana() {
         initComponents();
+        
+        jButtonBandera.setEnabled(true);
+        jButtonFin.setEnabled(false);
     }
 
     /**
@@ -148,6 +158,7 @@ public class Ventana extends javax.swing.JFrame {
                 .addComponent(jButtonComprobar))
         );
 
+        jTextAreaTicket.setEditable(false);
         jTextAreaTicket.setColumns(20);
         jTextAreaTicket.setRows(5);
         jScrollPane1.setViewportView(jTextAreaTicket);
@@ -170,6 +181,25 @@ public class Ventana extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        jButtonBandera.setBackground(new java.awt.Color(0, 153, 51));
+        jButtonBandera.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jButtonBandera.setText("START");
+        jButtonBandera.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonBanderaActionPerformed(evt);
+            }
+        });
+
+        jButtonFin.setBackground(new java.awt.Color(204, 0, 0));
+        jButtonFin.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jButtonFin.setText("FINISH");
+        jButtonFin.setEnabled(false);
+        jButtonFin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonFinActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
@@ -178,9 +208,9 @@ public class Ventana extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(jButtonBandera, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonFin, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jButtonBandera)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButtonFin))
                     .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -232,6 +262,90 @@ public class Ventana extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButtonBanderaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBanderaActionPerformed
+        
+        //Incremento el Numero de Ticket
+        contadorTicket++;
+        DecimalFormat formato = new DecimalFormat("00000");        
+        
+        jTextAreaTicket.setText("");
+        jTextAreaTicket.append("TICKET\n======\n");
+        jTextAreaTicket.append("Nº ticket: " + formato.format(contadorTicket) + "\n");
+        
+        // Obtenenmos la Fecha Actual
+        formato.applyPattern("00");
+        Calendar rightNow = Calendar.getInstance();
+
+        String day     = formato.format(rightNow.get(Calendar.DATE));
+        String month   = formato.format(rightNow.get(Calendar.MONTH) + 1);
+        String year    = String.valueOf(rightNow.get(Calendar.YEAR));
+        horaIni    = rightNow.get(Calendar.HOUR_OF_DAY);
+        minutoIni  = rightNow.get(Calendar.MINUTE);
+        segundoIni = rightNow.get(Calendar.SECOND);
+
+        //Mostramos la Fecha en formato DD-MM-YYYY
+        jTextAreaTicket.append("Fecha: " + day + "-" + month + "-" + year + "\n\n");
+        
+        //Mostramos la Hora en formato HH:MI:SS
+        jTextAreaTicket.append("Hora bajada de bandera: " +  formato.format(horaIni) + ":" + formato.format(minutoIni) + ":" + formato.format(segundoIni) + "\n");
+        
+        // Cambiamos de orden la habilitacion de botones
+        jButtonBandera.setEnabled(false);
+        jButtonFin.setEnabled(true);
+    }//GEN-LAST:event_jButtonBanderaActionPerformed
+
+    private void jButtonFinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFinActionPerformed
+        
+        // Obtenenmos la Fecha Final
+        DecimalFormat formato = new DecimalFormat("00"); 
+        Calendar rightNow = Calendar.getInstance();        
+        int horaFin    = rightNow.get(Calendar.HOUR_OF_DAY);
+        int minutoFin  = rightNow.get(Calendar.MINUTE);
+        int segundoFin = rightNow.get(Calendar.SECOND);
+        
+        //Si se la hora Inicio es 23:50 y la fin las 00:10 se le suma 24 horas
+        if (horaFin < horaIni)
+            horaFin = horaFin + 24;
+        
+        //Mostramos la Hora en formato HH:MI:SS
+        jTextAreaTicket.append("Hora fin trayecto: " +  formato.format(horaFin) + ":" + formato.format(minutoFin) + ":" + formato.format(segundoFin) + "\n");
+        
+        //Calculamos segundos totales Inicio
+        int segIniTotales = (horaIni * 3600) + (minutoIni * 60) + segundoIni;
+        
+        //Calculamos segundos totales Fin
+        int segFinTotales = (horaFin * 3600) + (minutoFin * 60) + segundoFin;
+        
+        //Calculamos el Tiempo total
+        int segTotales = segFinTotales - segIniTotales;
+        int duracionSegundos = segTotales;
+        int duracionHoras   = duracionSegundos / 3600;
+        duracionSegundos = duracionSegundos - (duracionHoras * 3600);        
+        int duracionMinutos = duracionSegundos / 60;
+        duracionSegundos = duracionSegundos - (duracionMinutos * 60); 
+        
+        //Mostramos la Duración del Viaje
+        jTextAreaTicket.append("Duración trayecto: " + formato.format(duracionHoras) + ":" + formato.format(duracionMinutos) + ":" + formato.format(duracionSegundos) + "\n");
+        
+        //Mostramos la Tarifa por Minuto
+        jTextAreaTicket.append("Tarifa por minuto: " + TARIFA + " €" + "\n" + "\n");
+        
+        double importe = (segTotales * TARIFA) / 60;
+        double importeIVA = (importe * IVA);
+        double importeTotal = importe + importeIVA;
+        double importeRound = Math.round(importe * 100);
+        double importeIVARound = Math.round(importeIVA * 100);
+        double importeTotalRound = Math.round(importeTotal * 100);
+
+        jTextAreaTicket.append("Importe: " + (importeRound / 100) + " €" + "\n");
+        jTextAreaTicket.append("IVA: " + (importeIVARound / 100) + " €" + "\n");
+        jTextAreaTicket.append("Importe total: " + (importeTotalRound / 100) + " €");
+        
+        // Cambiamos de orden la habilitacion de botones
+        jButtonBandera.setEnabled(true);
+        jButtonFin.setEnabled(false);
+    }//GEN-LAST:event_jButtonFinActionPerformed
 
     /**
      * @param args the command line arguments
