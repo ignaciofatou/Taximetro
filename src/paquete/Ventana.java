@@ -7,6 +7,7 @@ package paquete;
 
 import java.text.DecimalFormat;
 import java.util.Calendar;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 
 /**
  *
@@ -14,12 +15,10 @@ import java.util.Calendar;
  */
 public class Ventana extends javax.swing.JFrame {
 
-    int contadorTicket = 0;
-    int horaIni    = 0;
-    int minutoIni  = 0;
-    int segundoIni = 0;
-    final double TARIFA = 0.50;
-    final double IVA = 0.21;
+    int contadorTicket   = 0;
+    long iniMilisegundos = 0;
+    final double TARIFA  = 0.50;
+    final double IVA     = 0.21;
     
     public Ventana() {
         initComponents();
@@ -276,19 +275,16 @@ public class Ventana extends javax.swing.JFrame {
         // Obtenenmos la Fecha Actual
         formato.applyPattern("00");
         Calendar rightNow = Calendar.getInstance();
-
-        String day     = formato.format(rightNow.get(Calendar.DATE));
-        String month   = formato.format(rightNow.get(Calendar.MONTH) + 1);
-        String year    = String.valueOf(rightNow.get(Calendar.YEAR));
-        horaIni    = rightNow.get(Calendar.HOUR_OF_DAY);
-        minutoIni  = rightNow.get(Calendar.MINUTE);
-        segundoIni = rightNow.get(Calendar.SECOND);
+        String day      = formato.format(rightNow.get(Calendar.DATE));
+        String month    = formato.format(rightNow.get(Calendar.MONTH) + 1);
+        String year     = String.valueOf(rightNow.get(Calendar.YEAR));
+        iniMilisegundos = rightNow.getTimeInMillis();
 
         //Mostramos la Fecha en formato DD-MM-YYYY
         jTextAreaTicket.append("Fecha: " + day + "-" + month + "-" + year + "\n\n");
         
-        //Mostramos la Hora en formato HH:MI:SS
-        jTextAreaTicket.append("Hora bajada de bandera: " +  formato.format(horaIni) + ":" + formato.format(minutoIni) + ":" + formato.format(segundoIni) + "\n");
+         //Mostramos la Hora en formato HH:MI:SS
+        jTextAreaTicket.append("Hora bajada de bandera: " +  DurationFormatUtils.formatDuration(iniMilisegundos, "hh:mm:ss") + "\n");
         
         // Cambiamos de orden la habilitacion de botones
         jButtonBandera.setEnabled(false);
@@ -298,33 +294,17 @@ public class Ventana extends javax.swing.JFrame {
     private void jButtonFinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFinActionPerformed
         
         // Obtenenmos la Fecha Final
-        DecimalFormat formato = new DecimalFormat("00"); 
-        Calendar rightNow = Calendar.getInstance();        
-        int horaFin    = rightNow.get(Calendar.HOUR_OF_DAY);
-        int minutoFin  = rightNow.get(Calendar.MINUTE);
-        int segundoFin = rightNow.get(Calendar.SECOND);
-        
-        //Si se la hora Inicio es 23:50 y la fin las 00:10 se le suma 24 horas
-        if (horaFin < horaIni)
-            horaFin = horaFin + 24;
+        Calendar rightNow     = Calendar.getInstance();
+        long finMilisegundos  = rightNow.getTimeInMillis();
         
         //Mostramos la Hora en formato HH:MI:SS
-        jTextAreaTicket.append("Hora fin trayecto: " +  formato.format(horaFin) + ":" + formato.format(minutoFin) + ":" + formato.format(segundoFin) + "\n");
-        
-        //Calculamos segundos totales Inicio
-        int segIniTotales = getSegundosTotales(horaIni, minutoIni, segundoIni);
-        
-        //Calculamos segundos totales Fin
-        int segFinTotales = getSegundosTotales(horaFin, minutoFin, segundoFin);
+        jTextAreaTicket.append("Hora fin trayecto: " +  DurationFormatUtils.formatDuration(finMilisegundos, "H:mm:ss") + "\n");
         
         //Calculamos el Tiempo total
-        int segTotales       = segFinTotales - segIniTotales;
-        int duracionHoras    = getHoras(segTotales);                
-        int duracionMinutos  = getMinutos(segTotales, duracionHoras);
-        int duracionSegundos = getSegundos(segTotales, duracionHoras, duracionMinutos);
+        long segTotales = (finMilisegundos  - iniMilisegundos) / 1000;
 
         //Mostramos la Duración del Viaje
-        jTextAreaTicket.append("Duración trayecto: " + formato.format(duracionHoras) + ":" + formato.format(duracionMinutos) + ":" + formato.format(duracionSegundos) + "\n");
+        jTextAreaTicket.append("Duración trayecto: " + DurationFormatUtils.formatDuration(segTotales * 1000, "H:mm:ss") + "\n");
         
         //Mostramos la Tarifa por Minuto
         jTextAreaTicket.append("Tarifa por minuto: " + TARIFA + " €" + "\n" + "\n");
@@ -334,7 +314,7 @@ public class Ventana extends javax.swing.JFrame {
         double importeTotal = importe + importeIVA;
         
         //Establecemos el Formato para Redondear a 2 decimales
-        formato.applyPattern("#.##");
+        DecimalFormat formato = new DecimalFormat("#.##"); 
         
         jTextAreaTicket.append("Importe: " + formato.format(importe) + " €" + "\n");
         jTextAreaTicket.append("IVA: " + formato.format(importeIVA) + " €" + "\n");
@@ -344,26 +324,6 @@ public class Ventana extends javax.swing.JFrame {
         jButtonBandera.setEnabled(true);
         jButtonFin.setEnabled(false);
     }//GEN-LAST:event_jButtonFinActionPerformed
-
-    
-    private int getSegundosTotales(int horas, int minutos, int segundos){        
-        return ((horas * 3600) + (minutos * 60) + segundos);        
-    }
-    
-    private int getHoras(int segundosTotales){
-        return (segundosTotales / 3600);
-    }
-    private int getMinutos(int segundosTotales, int horas){
-        
-        int segundosRestantes = segundosTotales - (horas * 3600);
-        return (segundosRestantes / 60);
-    }    
-    private int getSegundos(int segundosTotales, int horas, int minutos){
-        
-        int segundosRestantes = segundosTotales - (horas * 3600);        
-        return (segundosTotales - (minutos * 60));
-    }
-    
     
     /**
      * @param args the command line arguments
