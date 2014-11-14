@@ -5,9 +5,13 @@
  */
 package paquete;
 
+import es.javiergarbedo.coordinateslib.CoordinatesConverter;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import javax.swing.JOptionPane;
 import org.apache.commons.lang3.time.DurationFormatUtils;
+import org.apache.commons.validator.routines.CreditCardValidator;
 
 /**
  *
@@ -41,8 +45,8 @@ public class Ventana extends javax.swing.JFrame {
         jTextLongitud = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jLabelLatitud = new javax.swing.JLabel();
-        jLabelLongitud = new javax.swing.JLabel();
+        jLLatitud = new javax.swing.JLabel();
+        jLLongitud = new javax.swing.JLabel();
         jLabelIcono = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
@@ -54,7 +58,7 @@ public class Ventana extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextAreaTicket = new javax.swing.JTextArea();
         jPanel3 = new javax.swing.JPanel();
-        jLabelMapa = new javax.swing.JLabel();
+        jLabelMapaRuta = new javax.swing.JLabel();
         jButtonBandera = new javax.swing.JButton();
         jButtonFin = new javax.swing.JButton();
 
@@ -62,6 +66,10 @@ public class Ventana extends javax.swing.JFrame {
         setTitle("Taxímetro");
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Posición GPS Inicio", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 1, 11))); // NOI18N
+
+        jTextLatitud.setText("36.6750169");
+
+        jTextLongitud.setText("-5.4465834");
 
         jLabel1.setText("Latitud");
 
@@ -85,8 +93,8 @@ public class Ventana extends javax.swing.JFrame {
                     .addComponent(jTextLongitud))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabelLongitud)
-                    .addComponent(jLabelLatitud))
+                    .addComponent(jLLongitud)
+                    .addComponent(jLLatitud))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabelIcono, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -98,12 +106,12 @@ public class Ventana extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jTextLatitud, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelLatitud))
+                    .addComponent(jLLatitud))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jTextLongitud, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelLongitud))
+                    .addComponent(jLLongitud))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jLabelIcono, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -113,6 +121,8 @@ public class Ventana extends javax.swing.JFrame {
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos del trayecto", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 1, 11))); // NOI18N
 
         jLabel3.setText("Destino");
+
+        jTextDestino.setText("Sevilla");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -140,6 +150,11 @@ public class Ventana extends javax.swing.JFrame {
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Tarjeta de crédito", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 1, 11))); // NOI18N
 
         jButtonComprobar.setText("Comprobar");
+        jButtonComprobar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonComprobarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -170,13 +185,13 @@ public class Ventana extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabelMapa, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
+                .addComponent(jLabelMapaRuta, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(jLabelMapa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabelMapaRuta, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -223,7 +238,7 @@ public class Ventana extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel5Layout.createSequentialGroup()
@@ -275,22 +290,45 @@ public class Ventana extends javax.swing.JFrame {
         // Obtenenmos la Fecha Actual
         formato.applyPattern("00");
         Calendar rightNow = Calendar.getInstance();
-        String day      = formato.format(rightNow.get(Calendar.DATE));
-        String month    = formato.format(rightNow.get(Calendar.MONTH) + 1);
-        String year     = String.valueOf(rightNow.get(Calendar.YEAR));
         iniMilisegundos = rightNow.getTimeInMillis();
 
         //Mostramos la Fecha en formato DD-MM-YYYY
-        jTextAreaTicket.append("Fecha: " + day + "-" + month + "-" + year + "\n\n");
+        SimpleDateFormat horaActual = new SimpleDateFormat("d-M-y");
+        jTextAreaTicket.append("Fecha: " + horaActual.format(rightNow.getTime()) + "\n\n");
+
+        //Mostramos la Hora en formato HH:MI:SS
+        horaActual.applyPattern("HH:mm:ss");
+        jTextAreaTicket.append("Hora bajada de bandera: " +  horaActual.format(rightNow.getTime()) + "\n");
         
-         //Mostramos la Hora en formato HH:MI:SS
-        jTextAreaTicket.append("Hora bajada de bandera: " +  DurationFormatUtils.formatDuration(iniMilisegundos, "hh:mm:ss") + "\n");
+        //Ponemos las coordenadas
+        muestraCoordenadas();
         
         // Cambiamos de orden la habilitacion de botones
         jButtonBandera.setEnabled(false);
         jButtonFin.setEnabled(true);
     }//GEN-LAST:event_jButtonBanderaActionPerformed
 
+    private void muestraCoordenadas(){
+        
+        //Latitud
+        System.out.println("latitud: " + jTextLatitud.getText());
+        if (!jTextLatitud.getText().equals("")){
+            jTextLatitud.setText(jTextLatitud.getText().replace(",", "."));
+            jLLatitud.setText(CoordinatesConverter.decimalToDMS(Double.valueOf(jTextLatitud.getText())));
+        }            
+        else
+            jLLatitud.setText("");
+        System.out.println("latitud: " + jTextLatitud.getText());
+
+        //Longitud
+        if (!jTextLongitud.getText().equals("")){
+            jTextLongitud.setText(jTextLongitud.getText().replace(",", "."));
+            jLLongitud.setText(CoordinatesConverter.decimalToDMS(Double.valueOf(jTextLongitud.getText())));
+        }
+        else
+            jLLongitud.setText("");
+    }
+    
     private void jButtonFinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFinActionPerformed
         
         // Obtenenmos la Fecha Final
@@ -298,7 +336,8 @@ public class Ventana extends javax.swing.JFrame {
         long finMilisegundos  = rightNow.getTimeInMillis();
         
         //Mostramos la Hora en formato HH:MI:SS
-        jTextAreaTicket.append("Hora fin trayecto: " +  DurationFormatUtils.formatDuration(finMilisegundos, "H:mm:ss") + "\n");
+        SimpleDateFormat horaActual = new SimpleDateFormat("HH:mm:ss");
+        jTextAreaTicket.append("Hora fin trayecto: " +  horaActual.format(rightNow.getTime()) + "\n");
         
         //Calculamos el Tiempo total
         long segTotales = (finMilisegundos  - iniMilisegundos) / 1000;
@@ -306,10 +345,45 @@ public class Ventana extends javax.swing.JFrame {
         //Mostramos la Duración del Viaje
         jTextAreaTicket.append("Duración trayecto: " + DurationFormatUtils.formatDuration(segTotales * 1000, "H:mm:ss") + "\n");
         
+        //Calculamos y Mostramos los Importes
+        calculaImportes(segTotales);
+        
+        //Mostramos el Recorrido en el Mapa
+        muestraRecorridoMapa();
+        
+        // Cambiamos de orden la habilitacion de botones
+        jButtonBandera.setEnabled(true);
+        jButtonFin.setEnabled(false);
+    }//GEN-LAST:event_jButtonFinActionPerformed
+
+    private void jButtonComprobarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonComprobarActionPerformed
+        
+        // Validamos la Tarjeta de Credito
+        if (!jTextTarjeta.getText().equals("")){
+
+            CreditCardValidator validaTarjeta = new CreditCardValidator();
+        
+            if (validaTarjeta.isValid(jTextTarjeta.getText()))
+                JOptionPane.showMessageDialog(
+                this, 
+                "Tarjeta Válida", 
+                "Correcto", 
+                JOptionPane.INFORMATION_MESSAGE);
+            else
+                JOptionPane.showMessageDialog(
+                this, 
+                "Tarjeta Inválida", 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_jButtonComprobarActionPerformed
+    
+    private void calculaImportes(long segundos)
+    {
         //Mostramos la Tarifa por Minuto
         jTextAreaTicket.append("Tarifa por minuto: " + TARIFA + " €" + "\n" + "\n");
         
-        double importe = (segTotales * TARIFA) / 60;
+        double importe = (segundos * TARIFA) / 60;
         double importeIVA = (importe * IVA);
         double importeTotal = importe + importeIVA;
         
@@ -319,11 +393,41 @@ public class Ventana extends javax.swing.JFrame {
         jTextAreaTicket.append("Importe: " + formato.format(importe) + " €" + "\n");
         jTextAreaTicket.append("IVA: " + formato.format(importeIVA) + " €" + "\n");
         jTextAreaTicket.append("Importe total: " + formato.format(importeTotal) + " €");
-        
-        // Cambiamos de orden la habilitacion de botones
-        jButtonBandera.setEnabled(true);
-        jButtonFin.setEnabled(false);
-    }//GEN-LAST:event_jButtonFinActionPerformed
+    }
+    
+    private void muestraRecorridoMapa(){
+        //Cambia los siguientes valores por las direciones de origen y destino deseadas
+        String origen = jTextLatitud.getText() + "," + jTextLongitud.getText();
+        String destino = jTextDestino.getText();
+
+        //Hay que sustituir los espacios por el carácter %20 para que se
+        //  interprete bien la URL que se generará
+        destino = destino.replaceAll(" ", "%20");
+
+        //Cambia el nombre [etiqueta] por el nombre de un objeto JLabel (etiqueta) que
+        //  has debido colocar antes en el formulario y que será donde se muestre el mapa.
+        //  Deja la etiqueta del formulario sin ningún texto en el diseño.
+        javax.swing.JLabel jLabelMapa = jLabelMapaRuta;
+
+        //Indica aquí el tamaño que desees para el mapa
+        int tamHorizontal = 200;
+        int tamVertical = 200;
+        //Puedes encontrar más información sobre el uso de mapas estáticos de Google Maps aquí:
+        //  http://code.google.com/intl/es-ES/apis/maps/documentation/staticmaps/
+
+        //A partir de aquí no hace falta cambiar nada
+        try {
+            String txtDireccionImagenMapa = "http://maps.google.com/maps/api/staticmap?path="
+                    + origen + "|" + destino + "&size=" + tamHorizontal + "x" + tamVertical
+                    + "&language=ES&sensor=false";
+            System.out.println(txtDireccionImagenMapa);
+            java.awt.Toolkit toolkit = java.awt.Toolkit.getDefaultToolkit();
+            java.awt.Image imagenMapa = toolkit.getImage(new java.net.URL(txtDireccionImagenMapa));
+            jLabelMapa.setIcon(new javax.swing.ImageIcon(imagenMapa));
+        } catch (java.net.MalformedURLException e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "La dirección de imagen indicada no es correcta");
+        }
+    }
     
     /**
      * @param args the command line arguments
@@ -364,13 +468,13 @@ public class Ventana extends javax.swing.JFrame {
     private javax.swing.JButton jButtonBandera;
     private javax.swing.JButton jButtonComprobar;
     private javax.swing.JButton jButtonFin;
+    private javax.swing.JLabel jLLatitud;
+    private javax.swing.JLabel jLLongitud;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabelIcono;
-    private javax.swing.JLabel jLabelLatitud;
-    private javax.swing.JLabel jLabelLongitud;
-    private javax.swing.JLabel jLabelMapa;
+    private javax.swing.JLabel jLabelMapaRuta;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

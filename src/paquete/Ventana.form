@@ -77,8 +77,8 @@
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jLabelLongitud" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabelLatitud" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLLongitud" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLLatitud" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
                   <Component id="jLabelIcono" min="-2" pref="165" max="-2" attributes="0"/>
@@ -93,13 +93,13 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jTextLatitud" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabelLatitud" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLLatitud" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jTextLongitud" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabelLongitud" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLLongitud" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -112,8 +112,14 @@
       </Layout>
       <SubComponents>
         <Component class="javax.swing.JTextField" name="jTextLatitud">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="36.6750169"/>
+          </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="jTextLongitud">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="-5.4465834"/>
+          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
@@ -125,9 +131,9 @@
             <Property name="text" type="java.lang.String" value="Longitud"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="jLabelLatitud">
+        <Component class="javax.swing.JLabel" name="jLLatitud">
         </Component>
-        <Component class="javax.swing.JLabel" name="jLabelLongitud">
+        <Component class="javax.swing.JLabel" name="jLLongitud">
         </Component>
         <Component class="javax.swing.JLabel" name="jLabelIcono">
           <Properties>
@@ -184,6 +190,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="jTextDestino">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Sevilla"/>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>
@@ -224,7 +233,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <Component id="jScrollPane1" pref="227" max="32767" attributes="0"/>
+                          <Component id="jScrollPane1" pref="248" max="32767" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="jPanel4" min="-2" max="-2" attributes="0"/>
                       </Group>
@@ -280,6 +289,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Comprobar"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonComprobarActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -315,7 +327,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jLabelMapa" pref="224" max="32767" attributes="0"/>
+                      <Component id="jLabelMapaRuta" pref="200" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -323,14 +335,14 @@
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="jLabelMapa" max="32767" attributes="0"/>
+                      <Component id="jLabelMapaRuta" pref="200" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="jLabelMapa">
+            <Component class="javax.swing.JLabel" name="jLabelMapaRuta">
             </Component>
           </SubComponents>
         </Container>
